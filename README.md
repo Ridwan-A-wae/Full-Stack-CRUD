@@ -1,3 +1,3 @@
 # CRUD-MERN-Stack
-npm start
+npm start //
 npm run dev
