@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
 
 function CreateUser() {
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [age, setAge] = useState();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [age, setAge] = useState('');
 
   const navigate = useNavigate();
 
@@ -17,10 +18,18 @@ function CreateUser() {
         email,
         age,
       });
-      navigate("/");
+      await Swal.fire(
+        'Success',
+        'User has been created',
+        'success'
+      )
+      navigate('/')
     } catch (err) {
       console.error("Error submitting form:", err);
     }
+    setName('')
+    setEmail('')
+    setAge('')
   };
 
   return (
@@ -31,6 +40,7 @@ function CreateUser() {
           <div className="mb-2">
             <label htmlFor="">Name</label>
             <input
+            value={name}
               type="text"
               placeholder="Enter Name"
               className="form-control"
@@ -40,6 +50,7 @@ function CreateUser() {
           <div className="mb-2">
             <label htmlFor="">Email</label>
             <input
+            value={email}
               type="email"
               placeholder="Enter Email"
               className="form-control"
@@ -49,6 +60,7 @@ function CreateUser() {
           <div className="mb-2">
             <label htmlFor="">Age</label>
             <input
+            value={age}
               type="text"
               placeholder="Enter Age"
               className="form-control"

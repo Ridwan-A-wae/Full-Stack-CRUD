@@ -10,6 +10,16 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.json(user);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ error: "An error occurred while fetching users." });
+  }
+};
+
 exports.createUser = async (req, res) => {
   try {
     const newUser = new User(req.body);

@@ -8,6 +8,7 @@ const {
   updateUser,
   getUsers,
   deleteUser,
+  getUser
 } = require("./controllers/userController");
 
 const app = express();
@@ -23,6 +24,7 @@ mongoose.connect(
 );
 
 app.get("/", getUsers);
+app.get("/:id", getUser);
 app.post("/create", createUser);
 app.put("/update/:id", updateUser);
 app.delete("/delete/:id", deleteUser);

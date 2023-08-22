@@ -1,24 +1,31 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function UpdateUser() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [age, setAge] = useState('');
+  const fetchData = async () => {
+    const res = await axios.get(`http://localhost:5000/${id}`);
+    setName(res.data.name);
+    setEmail(res.data.email);
+    setAge(res.data.age);
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
     try {
       await axios.put(`http://localhost:5000/update/${id}`, {
         name,
         email,
         age,
       });
+      await Swal.fire("Success.", "User has been Updated", "success");
       navigate("/");
     } catch (error) {
       console.error("Error updating user:", error);
@@ -27,6 +34,12 @@ function UpdateUser() {
       );
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const newUser = () => {};
 
   return (
     <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
