@@ -1,67 +1,60 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2'
-import {getToken} from './services/authorize'
+import Swal from "sweetalert2";
+import { getToken } from "./services/authorize";
 
-function CreateUser() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [age, setAge] = useState('');
+function Register() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/create", {
-        name,
+      await axios.post("http://localhost:5000/register", {
+        username,
         email,
-        age,
+        password,
       });
-      await Swal.fire(
-        'Success',
-        'User has been created',
-        'success'
-      )
-      navigate('/')
+      await Swal.fire("Success", "User has been created", "success");
+      navigate("/login");
     } catch (err) {
       console.error("Error submitting form:", err);
     }
-    setName('')
-    setEmail('')
-    setAge('')
+    setUsername("");
+    setEmail("");
+    setPassword("");
+  };
+  const auth = () => {
+    if (getToken()) {
+      navigate("/");
+    }
   };
 
-  const auth = () => {
-    if (!getToken()) {
-      navigate("/")
-    }
-  }
-
   useEffect(() => {
-    auth()
-  },[])
+    auth();
+  }, []);
 
   return (
     <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
       <div className="w-50 bg-white rounded p-3">
         <form onSubmit={handleSubmit}>
-          <h2>Add User</h2>
+          <h2>Register</h2>
           <div className="mb-2">
-            <label htmlFor="">Name</label>
+            <label htmlFor="">Username</label>
             <input
-            value={name}
               type="text"
-              placeholder="Enter Name"
+              placeholder="Enter Username"
               className="form-control"
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="mb-2">
             <label htmlFor="">Email</label>
             <input
-            value={email}
               type="email"
               placeholder="Enter Email"
               className="form-control"
@@ -69,13 +62,12 @@ function CreateUser() {
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="">Age</label>
+            <label htmlFor="">Password</label>
             <input
-            value={age}
-              type="text"
-              placeholder="Enter Age"
+              type="password"
+              placeholder="Enter Password"
               className="form-control"
-              onChange={(e) => setAge(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button className="btn btn-success">Submit</button>
@@ -85,4 +77,4 @@ function CreateUser() {
   );
 }
 
-export default CreateUser;
+export default Register;

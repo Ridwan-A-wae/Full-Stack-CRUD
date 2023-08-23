@@ -11,6 +11,11 @@ const {
   getUser
 } = require("./controllers/userController");
 
+const {
+  createAdmin,
+  loginAdmin
+} = require('./controllers/adminController')
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -23,11 +28,17 @@ mongoose.connect(
   }
 );
 
+// User
 app.get("/", getUsers);
 app.get("/:id", getUser);
 app.post("/create", createUser);
 app.put("/update/:id", updateUser);
 app.delete("/delete/:id", deleteUser);
+
+// Admin
+app.post("/register", createAdmin)
+app.post("/login", loginAdmin)
+
 
 app.listen(5000, () => {
   console.log("Server is running");
