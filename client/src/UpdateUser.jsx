@@ -11,7 +11,7 @@ function UpdateUser() {
   const [age, setAge] = useState("");
 
   const fetchData = async () => {
-    const res = await axios.get(`http://localhost:5000/${id}`);
+    const res = await axios.get(`http://localhost:5000/users/${id}`);
     setName(res.data.name);
     setEmail(res.data.email);
     setAge(res.data.age);

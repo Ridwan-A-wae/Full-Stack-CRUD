@@ -8,13 +8,25 @@ import { getToken, logout } from "./services/authorize";
 function Users() {
   const [users, setUsers] = useState([]);
   const [isLoad, setIsLoad] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5); // จำนวนรายการต่อหน้า
+  const [hasNextPage, setHasNextPage] = useState(true);
+
   const navigate = useNavigate();
 
   const fetchData = async () => {
     setIsLoad(true);
     try {
-      const response = await axios.get("http://localhost:5000");
-      setUsers(response.data);
+      const response = await axios.get(
+        `http://localhost:5000/users?page=${currentPage}&limit=${perPage}`
+      );
+      if (response.data.users.length < 5) {
+        setHasNextPage(false);
+      } else {
+        setHasNextPage(true);
+      }
+      setUsers(response.data.users);
+      console.log(response.data.users.length)
       console.log(response.data);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -51,7 +63,7 @@ function Users() {
   useEffect(() => {
     fetchData();
     getToken();
-  }, []);
+  }, [currentPage, perPage]); // เรียก fetchData เมื่อ currentPage หรือ perPage มีการเปลี่ยนแปลง
 
   return (
     <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
@@ -128,6 +140,24 @@ function Users() {
               ))}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          <div className="d-flex justify-content-center">
+            <button
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="btn btn-sm btn-outline-primary mx-2"
+              disabled={currentPage <= 1}
+            >
+              Previous
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={!hasNextPage}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

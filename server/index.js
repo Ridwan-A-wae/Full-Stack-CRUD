@@ -29,8 +29,8 @@ mongoose.connect(
 );
 
 // User
-app.get("/", getUsers);
-app.get("/:id", getUser);
+app.get("/users", getUsers);
+app.get("/users/:id", getUser);
 app.post("/create", createUser);
 app.put("/update/:id", updateUser);
 app.delete("/delete/:id", deleteUser);

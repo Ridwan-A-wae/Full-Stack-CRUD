@@ -2,8 +2,21 @@ const User = require("../models/User");
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+
+    const startIndex = (page - 1) * limit;
+
+    const results = {};
+
+    const usersQuery = User.find().skip(startIndex).limit(limit);
+
+    results.users = await usersQuery;
+
+    results.totalCount = await User.countDocuments();
+
+
+    res.json(results);
   } catch (err) {
     console.error("Error fetching users:", err);
     res.status(500).json({ error: "An error occurred while fetching users." });
